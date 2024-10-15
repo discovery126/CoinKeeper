@@ -3,15 +3,13 @@ package org.denis.coinkeeper.api.controllers;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.denis.coinkeeper.api.Services.CurrencyService;
 import org.denis.coinkeeper.api.Services.UserService;
-import org.denis.coinkeeper.api.dto.*;
-import org.denis.coinkeeper.api.exceptions.BadRequestException;
-import org.springframework.http.HttpStatus;
+import org.denis.coinkeeper.api.dto.UserAuthDto;
+import org.denis.coinkeeper.api.dto.UserDto;
+import org.denis.coinkeeper.api.dto.UserFinanceDto;
+import org.denis.coinkeeper.api.dto.UserSummaryDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BindingResult;
-import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -20,50 +18,24 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @RestController
+@RequestMapping("/user")
 public class UserController {
 
     private final UserService userService;
-    private final CurrencyService currencyService;
-
-    public static final String CURRENCIES_API_ENDPOINT = "/api/currency";
-
     public static final String USER_API_ENDPOINT = "/api/user";
-    public static final String REMOVE_USER_API_ENDPOINT = "/api/user/remove";
-    public static final String USER_EDIT_API_ENDPOINT = "/api/user/edit";
-    public static final String USERS_API_ENDPOINT = "/api/users";
-    public static final String REGISTER_API_ENDPOINT = "/api/register";
 
-
-    @PostMapping(REGISTER_API_ENDPOINT)
-    @ResponseStatus(HttpStatus.CREATED)
-    public ResponseEntity<UserSummaryDto> register(@RequestBody @Valid UserAuthDto userAuthDto,
-                                               BindingResult bindingResult){
-        if (bindingResult.hasErrors()) {
-            throw new BadRequestException(bindingResult
-                    .getAllErrors().stream()
-                    .map(ObjectError::getDefaultMessage)
-                    .toList());
-        }
+    @PostMapping("/register")
+    public ResponseEntity<UserSummaryDto> register(@RequestBody @Valid UserAuthDto userAuthDto){
 
         UserSummaryDto userSummaryDto = userService.register(userAuthDto);
 
         return ResponseEntity
-                .created(URI.create(CURRENCIES_API_ENDPOINT))
+                .created(URI.create(USER_API_ENDPOINT))
                 .body(userSummaryDto);
     }
 
-    @GetMapping(CURRENCIES_API_ENDPOINT)
-    @ResponseStatus(HttpStatus.OK)
-    public ResponseEntity<List<CurrencyDto>> getCurrencyPage() {
 
-        List<CurrencyDto> currencyDtoList = currencyService.getCurrencyDtoList();
-
-        return ResponseEntity
-                .ok(currencyDtoList);
-    }
-
-    @GetMapping(USER_API_ENDPOINT)
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping
     public ResponseEntity<UserSummaryDto> getUser(Authentication authorization) {
         String email = authorization.getName();
 
@@ -78,8 +50,8 @@ public class UserController {
     }
 
 
-    @PutMapping(USER_EDIT_API_ENDPOINT)
-    public ResponseEntity<?> putUserProfile(@RequestBody UserDto userDto,
+    @PutMapping
+    public ResponseEntity<Void> putUserProfile(@RequestBody UserDto userDto,
                                              Authentication authorization) {
         String email = authorization.getName();
 
@@ -90,16 +62,15 @@ public class UserController {
                 .build();
     }
 
-    @GetMapping(USERS_API_ENDPOINT)
-    @ResponseStatus(HttpStatus.OK)
+    @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
 
         List<UserDto> userDtoList = userService.getUsers();
         return ResponseEntity
                 .ok(userDtoList);
     }
-    @DeleteMapping(REMOVE_USER_API_ENDPOINT)
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+
+    @DeleteMapping
     public ResponseEntity<?> deleteUser(Authentication authorization) {
         String email = authorization.getName();
 
@@ -109,39 +80,4 @@ public class UserController {
                 .noContent()
                 .build();
     }
-//
-//    @PostMapping(CURRENCY_API_ENDPOINT)
-//    @ResponseStatus
-//    public ResponseEntity<?> createUserCurrency(@RequestParam(value = "currency") String currencyName,
-//                                                Authentication authorization) {
-//        String email = authorization.getName();
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//        Optional<CurrencyEntity> currencyEntity = currencyRepository.findByCurrencyName(currencyName);
-//        if (currencyEntity.isPresent()) {
-//            UserEntity userResult = userEntity.get();
-//            userResult.setCurrency(currencyEntity.get());
-//            userRepository.save(userResult);
-//
-//            return ResponseEntity
-//                    .created(URI.create(ACCOUNT_API_ENDPOINT))
-//                    .build();
-//        }
-//        else {
-//            throw new BadRequestException(String.format("The currency \"%s\" does not exist",currencyName));
-//        }
-//    }
-//
-//    @PostMapping(ACCOUNT_API_ENDPOINT)
-//    public ResponseEntity<?> createUserAccount(@RequestParam(value = "account") Long account,
-//                                                Authentication authorization) {
-//        String email = authorization.getName();
-//        Optional<UserEntity> userEntity = userRepository.findByEmail(email);
-//        UserEntity userResult = userEntity.get();
-//        userResult.setAccount(account);
-//        userRepository.save(userResult);
-//        return ResponseEntity
-//                .created(URI.create(USER_API_ENDPOINT))
-//                .build();
-//    }
-//
 }

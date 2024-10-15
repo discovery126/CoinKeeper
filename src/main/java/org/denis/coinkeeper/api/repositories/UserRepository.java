@@ -13,7 +13,4 @@ public interface UserRepository extends JpaRepository<UserEntity,Long> {
 
     Stream<UserEntity> streamAllBy();
     Optional<UserEntity> findByEmail(String email);
-
-    @Modifying
-    void deleteByUserId(int userId);
 }

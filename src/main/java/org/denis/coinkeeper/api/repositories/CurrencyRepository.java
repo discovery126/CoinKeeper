@@ -11,5 +11,6 @@ import java.util.stream.Stream;
 public interface CurrencyRepository extends JpaRepository<CurrencyEntity,Long> {
 
     Stream<CurrencyEntity> streamAllBy();
+    CurrencyEntity getCurrencyEntityByCurrencyId(Long currencyId);
     Optional<CurrencyEntity> findByCurrencyName(String currencyName);
 }

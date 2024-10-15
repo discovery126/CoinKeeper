@@ -17,10 +17,10 @@ import org.springframework.stereotype.Component;
 public class UserAuthDto {
 
     @NotNull
-    @Email(message = "bad email")
+    @Email(message = "email: invalid format")
     private String email;
 
     @NotNull
-    @Length(min = 6,max = 30,message = "length password must be more 6 symbols and less 30 symbols")
+    @Length(min = 6,max = 30,message = "password: length must be more than 6 and less than 30 symbols")
     private String password;
 }
