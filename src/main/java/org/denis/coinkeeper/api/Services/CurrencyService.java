@@ -1,5 +1,6 @@
 package org.denis.coinkeeper.api.Services;
 
+import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.CurrencyDto;
 import org.denis.coinkeeper.api.factories.CurrencyDtoFactory;
 import org.denis.coinkeeper.api.repositories.CurrencyRepository;
@@ -9,10 +10,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class CurrencyService {
 
-    CurrencyRepository currencyRepository;
-    CurrencyDtoFactory currencyDtoFactory;
+    private final CurrencyRepository currencyRepository;
+    private final CurrencyDtoFactory currencyDtoFactory;
 
     public List<CurrencyDto> getCurrencyDtoList() {
 

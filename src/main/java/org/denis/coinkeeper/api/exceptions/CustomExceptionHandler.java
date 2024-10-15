@@ -2,9 +2,16 @@ package org.denis.coinkeeper.api.exceptions;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.util.List;
@@ -21,7 +28,7 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
                 .body(ErrorDto
                         .builder()
                         .error("Server error")
-                        .errorDescription(List.of(ex.getMessage()))
+                        .errorDetails(List.of(ex.getMessage()))
                         .build()
                 );
     }
@@ -29,22 +36,26 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(BadRequestException.class)
     protected ResponseEntity<ErrorDto> handleBadRequestException(BadRequestException ex) {
 
-        if (ex.getErrors().isEmpty()) {
-            return ResponseEntity.badRequest()
-                    .body(ErrorDto
-                            .builder()
-                            .error("Bad request")
-                            .errorDescription(List.of(ex.getMessage()))
-                            .build()
-                    );
-        } else {
-            return ResponseEntity.badRequest()
-                    .body(ErrorDto
-                            .builder()
-                            .error("Bad request")
-                            .errorDescription(ex.getErrors())
-                            .build()
-                    );
-        }
+        return ResponseEntity.badRequest()
+                .body(ErrorDto
+                        .builder()
+                        .error("Bad request")
+                        .errorDetails(ex.getErrors().isEmpty() ? List.of(ex.getMessage()) : ex.getErrors())
+                        .build()
+                );
+
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatusCode status, WebRequest request) {
+
+        final List<String> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(FieldError::getDefaultMessage)
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorDto("Validation failure", errors));
+
     }
 }

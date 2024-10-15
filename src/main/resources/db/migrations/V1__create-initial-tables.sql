@@ -5,8 +5,6 @@ create table public.currency
     currency_description varchar(255),
     currency_name        varchar(255)
 );
-alter table public.currency
-    owner to denis;
 
 create table public.users
 (
@@ -21,9 +19,6 @@ create table public.users
     password    varchar(255)
 );
 
-alter table public.users
-    owner to denis;
-
 create table public.expenses
 (
     name varchar(255) ,
@@ -36,9 +31,6 @@ create table public.expenses
             references public.users,
     category    varchar(255)
 );
-
-alter table public.expenses
-    owner to denis;
 
 create table public.profit
 (
@@ -53,6 +45,4 @@ create table public.profit
     category  varchar(255)
 );
 
-alter table public.profit
-    owner to denis;
 

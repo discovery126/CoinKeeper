@@ -10,20 +10,18 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
-
+//TODO:  timur: Я бы  объединил ExpensesController и ProfitController
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/v1/expenses")
 public class ExpensesController {
 
-    public static final String CREATE_EXPENSES_API_ENDPOINT = "/api/expenses/new";
-    public static final String EXPENSES_API_ENDPOINT = "/api/expenses/{id}";
-    public static final String ALL_EXPENSES_API_ENDPOINT = "/api/expenses";
-    public static final String USER_API_ENDPOINT = "/api/user";
+    private static final String ENDPOINT_PATH = "/api/v1/expenses";
 
     private final ExpensesService expensesService;
 
 
-    @PostMapping(CREATE_EXPENSES_API_ENDPOINT)
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<?> createExpenses(@RequestBody ExpensesDto expensesDto,
                                            Authentication authorization) {
@@ -32,10 +30,10 @@ public class ExpensesController {
         expensesService.createExpenses(expensesDto,email);
 
         return ResponseEntity
-                .created(URI.create(USER_API_ENDPOINT))
+                .created(URI.create(ENDPOINT_PATH))
                 .build();
     }
-    @GetMapping(ALL_EXPENSES_API_ENDPOINT)
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ExpensesDto>> getAllExpenses(Authentication authorization) {
         String email = authorization.getName();
@@ -45,7 +43,7 @@ public class ExpensesController {
 
     }
 
-    @PutMapping(EXPENSES_API_ENDPOINT)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ExpensesDto> putExpenses(@RequestBody ExpensesDto expensesDto,
                                                  @PathVariable("id") Long expensesId,
@@ -59,7 +57,7 @@ public class ExpensesController {
 
     }
 
-    @GetMapping(EXPENSES_API_ENDPOINT)
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ExpensesDto> getExpenses(@PathVariable("id") Long expensesId,
                                                Authentication authorization) {
@@ -69,7 +67,7 @@ public class ExpensesController {
                 .ok(expensesService.getExpensesById(expensesId,email));
 
     }
-    @DeleteMapping(EXPENSES_API_ENDPOINT)
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> removeExpenses(@PathVariable("id") Long expensesId,
                                           Authentication authorization) {

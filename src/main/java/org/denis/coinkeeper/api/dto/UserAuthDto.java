@@ -2,25 +2,23 @@ package org.denis.coinkeeper.api.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.stereotype.Component;
 
+//TODO: timur:  Я бы переназвал класс в RegisterDto - ( тут могут появиться  новые поля)
 @Data
 @Builder
-@Component
-@AllArgsConstructor
-@NoArgsConstructor
 public class UserAuthDto {
 
+
+    //TODO: timur:  Я бы добавил кастомный валидатор проверки уникальности email)
+    //TODO: timur:  Еще я бы добавил поле login или username - он мог бы совпадать с email по желанию пользователя  )
     @NotNull
-    @Email(message = "bad email")
+    @Email(message = "email: invalid format")
     private String email;
 
     @NotNull
-    @Length(min = 6,max = 30,message = "length password must be more 6 symbols and less 30 symbols")
+    @Length(min = 6, max = 30, message = "password: length must be more than 6 and less than 30 symbols")
     private String password;
 }

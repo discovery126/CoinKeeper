@@ -13,17 +13,16 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
+@RequestMapping("/v1/profit")
 public class ProfitController {
 
-    public static final String CREATE_PROFIT_API_ENDPOINT = "/api/profit/new";
-    public static final String PROFIT_API_ENDPOINT = "/api/profit/{id}";
-    public static final String PROFITS_API_ENDPOINT = "/api/profits";
-    public static final String USER_API_ENDPOINT = "/api/user";
+
+    private static final String ENDPOINT_PATH = "/api/v1/profit";
 
     private final ProfitService profitService;
 
 
-    @PostMapping(CREATE_PROFIT_API_ENDPOINT)
+    @PostMapping
     @ResponseStatus(HttpStatus.OK)
     ResponseEntity<ProfitDto> createProfit(@RequestBody ProfitDto profitDto,
                                            Authentication authorization) {
@@ -32,10 +31,10 @@ public class ProfitController {
         profitService.createProfit(profitDto,email);
 
         return ResponseEntity
-                .created(URI.create(USER_API_ENDPOINT))
+                .created(URI.create(ENDPOINT_PATH))
                 .build();
     }
-    @GetMapping(PROFITS_API_ENDPOINT)
+    @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ProfitDto>> getProfits(Authentication authorization) {
         String email = authorization.getName();
@@ -45,7 +44,7 @@ public class ProfitController {
 
     }
 
-    @PutMapping(PROFIT_API_ENDPOINT)
+    @PutMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ProfitDto> putProfit(@RequestBody ProfitDto profitDto,
                                                @PathVariable("id") Long profitId,
@@ -59,7 +58,7 @@ public class ProfitController {
 
     }
 
-    @GetMapping(PROFIT_API_ENDPOINT)
+    @GetMapping("/{id}")
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<ProfitDto> getProfit(@PathVariable("id") Long profitId,
                                                Authentication authorization) {
@@ -69,7 +68,7 @@ public class ProfitController {
                 .ok(profitService.getProfitById(profitId,email));
 
     }
-    @DeleteMapping(PROFIT_API_ENDPOINT)
+    @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> removeProfit(@PathVariable("id") Long profitId,
                                                Authentication authorization) {

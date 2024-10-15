@@ -1,10 +1,5 @@
 package org.denis.coinkeeper.api.Services;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.fge.jsonpatch.JsonPatch;
-import com.github.fge.jsonpatch.JsonPatchException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.UserAuthDto;
@@ -34,18 +29,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserService {
     private final PasswordEncoder passwordEncoder;
-
     private final UserDtoFactory userDtoFactory;
     private final UserRepository userRepository;
-
     private final CurrencyRepository currencyRepository;
-    private final CurrencyDtoFactory currencyDtoFactory ;
-
-    private final ExpensesRepository expensesRepository;
-    private final ExpensesDtoFactory expensesDtoFactory;
-
-    private final ProfitRepository profitRepository;
-    private final ProfitDtoFactory profitDtoFactory;
 
 
     @Transactional

@@ -1,6 +1,8 @@
 
 server:
   port: 8080
+  servlet:
+    context-path: "/api"
 
 spring:
   application:
@@ -8,8 +10,8 @@ spring:
 
   datasource:
     url: jdbc:postgresql://localhost/coin-keeper
-    username: ${LOGIN_BD}
-    password: ${PASS_BD}
+    username: ${LOGIN_BD:coinkeeper}
+    password: ${PASS_BD:password}
     driver-class-name: org.postgresql.Driver
 
   jpa:
