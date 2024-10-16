@@ -1,6 +1,7 @@
 package org.denis.coinkeeper.api.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.Null;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,6 +14,7 @@ import lombok.NoArgsConstructor;
 public class CurrencyDto {
 
     @JsonProperty("currency_id")
+    @Null
     private Long currencyId;
 
     @JsonProperty("currency_name")
