@@ -33,6 +33,7 @@ public class ExpensesController {
                 .created(URI.create(ENDPOINT_PATH))
                 .build();
     }
+
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
     public ResponseEntity<List<ExpensesDto>> getAllExpenses(Authentication authorization) {
@@ -40,7 +41,6 @@ public class ExpensesController {
 
         return ResponseEntity
                 .ok(expensesService.getAllExpenses(email));
-
     }
 
     @PutMapping("/{id}")
@@ -54,7 +54,6 @@ public class ExpensesController {
 
         return ResponseEntity
                 .ok(expensesDtoResult);
-
     }
 
     @GetMapping("/{id}")
@@ -67,6 +66,7 @@ public class ExpensesController {
                 .ok(expensesService.getExpensesById(expensesId,email));
 
     }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<?> removeExpenses(@PathVariable("id") Long expensesId,
@@ -77,6 +77,5 @@ public class ExpensesController {
         return ResponseEntity
                 .noContent()
                 .build();
-
     }
 }
