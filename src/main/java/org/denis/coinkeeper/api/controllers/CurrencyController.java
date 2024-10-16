@@ -13,13 +13,15 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @RestController
-@RequestMapping("/currency")
+@RequestMapping("/v1/currency")
 public class CurrencyController {
+
+    private static final String ENDPOINT_PATH = "/api/v1/currency";
 
     private final CurrencyService currencyService;
 
 
-    @PostMapping("/new")
+    @PostMapping
     public ResponseEntity<?> createCurrency(@RequestBody CurrencyDto currencyDto) {
 
         currencyService.createCurrency(currencyDto);
@@ -47,7 +49,7 @@ public class CurrencyController {
                 .ok(currencyDto);
     }
 
-    @PutMapping("/{id}/edit")
+    @PutMapping("/{id}")
     public ResponseEntity<CurrencyDto> putCurrency(@PathVariable Long id,
                                                    @RequestBody CurrencyDto currencyDto){
 

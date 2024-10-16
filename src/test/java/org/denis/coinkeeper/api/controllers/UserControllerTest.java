@@ -3,8 +3,6 @@ package org.denis.coinkeeper.api.controllers;
 import org.denis.coinkeeper.api.Services.CurrencyService;
 import org.denis.coinkeeper.api.Services.UserService;
 import org.denis.coinkeeper.api.dto.*;
-import org.denis.coinkeeper.api.exceptions.BadRequestException;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -14,7 +12,6 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
-import org.springframework.validation.BindingResult;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -33,9 +30,6 @@ class UserControllerTest {
 
     @Mock
     CurrencyService currencyService;
-
-    @Mock
-    private BindingResult bindingResult;
 
     @InjectMocks
     UserController userController;
@@ -74,30 +68,31 @@ class UserControllerTest {
 
         // when
         Mockito.when(userService.register(authDto)).thenReturn(userSummaryDto);
-        var responseEntity = this.userController.register(authDto,bindingResult);
+        var responseEntity = this.userController.register(authDto);
 
         //then
         assertNotNull(responseEntity);
         assertEquals(HttpStatus.CREATED, responseEntity.getStatusCode());
         assertEquals(userSummaryDto, responseEntity.getBody());
     }
+// TODO:  timur:  Нужно тестировать в Integration тестах
 
-    @Test
-    @DisplayName("createUser, invalid input")
-    void registerUser_RequestIsInvalid_ReturnsError() {
-        //given
-        UserAuthDto authDto = UserAuthDto.builder()
-                .email("denmail")
-                .password("den1234")
-                .build();
-
-        //when
-        Mockito.when(bindingResult.hasErrors()).thenReturn(true);
-
-        //then
-        Assertions.assertThrows(BadRequestException.class,() ->
-                this.userController.register(authDto,bindingResult));
-    }
+//    @Test
+//    @DisplayName("createUser, invalid input")
+//    void registerUser_RequestIsInvalid_ReturnsError() {
+//        //given
+//        UserAuthDto authDto = UserAuthDto.builder()
+//                .email("denmail")
+//                .password("den1234")
+//                .build();
+//
+//        //when
+//        Mockito.when(bindingResult.hasErrors()).thenReturn(true);
+//
+//        //then
+//        Assertions.assertThrows(BadRequestException.class,() ->
+//                this.userController.register(authDto,bindingResult));
+//    }
     @Test
     @DisplayName("getAllCurrency,y return all currencies")
     void getCurrency_ReturnsListCurrencyDto() {
@@ -109,7 +104,7 @@ class UserControllerTest {
 
         //when
         Mockito.when(currencyService.getCurrencyDtoList()).thenReturn(currencyDtoList);
-        var responseEntity = this.userController.getCurrencyPage();
+        var responseEntity = this.userController.getCurrencies();
 
         //then
         assertNotNull(responseEntity);
@@ -148,7 +143,7 @@ class UserControllerTest {
         Mockito.when(userService.getUser(email)).thenReturn(userDto);
         Mockito.when(userService.getFinanceUser(email)).thenReturn(userFinanceDto);
 
-        var responseEntity = this.userController.getUser(authentication);
+        var responseEntity = this.userController.getUser();
 
         //then
         assertNotNull(responseEntity);
@@ -174,7 +169,7 @@ class UserControllerTest {
         //when
         Mockito.when(authentication.getName()).thenReturn(email);
 
-        var responseEntity = this.userController.putUserProfile(userDto,authentication);
+        var responseEntity = this.userController.putUserProfile(userDto);
 
         //then
         assertNotNull(responseEntity);
@@ -228,7 +223,7 @@ class UserControllerTest {
         //when
         Mockito.when(authentication.getName()).thenReturn(email);
 
-        var responseEntity = this.userController.deleteUser(authentication);
+        var responseEntity = this.userController.deleteUser();
 
         //then
         assertNotNull(responseEntity);

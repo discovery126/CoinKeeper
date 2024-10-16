@@ -1,4 +1,4 @@
-package org.denis.coinkeeper.Config;
+package org.denis.coinkeeper.config;
 
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.Services.CustomDetailsService;
@@ -50,8 +50,7 @@ public class SecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((auth) ->
-                        auth
-                                .requestMatchers("/user/register","/error").permitAll()
+                        auth.requestMatchers("/v1/user/register", "/error").permitAll()
                                 .anyRequest().authenticated())
                 .formLogin(AbstractAuthenticationFilterConfigurer::permitAll)
                 .httpBasic(withDefaults());

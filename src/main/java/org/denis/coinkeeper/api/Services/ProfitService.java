@@ -20,7 +20,6 @@ public class ProfitService {
 
     private final ProfitRepository profitRepository;
     private final ProfitDtoFactory profitDtoFactory;
-
     private final UserRepository userRepository;
 
     @Transactional

@@ -44,3 +44,5 @@ create table public.profit
             references public.users,
     category  varchar(255)
 );
+
+
