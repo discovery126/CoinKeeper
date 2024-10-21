@@ -1,7 +1,7 @@
 package org.denis.coinkeeper.config;
 
 import lombok.RequiredArgsConstructor;
-import org.denis.coinkeeper.api.Services.CustomDetailsService;
+import org.denis.coinkeeper.api.services.CustomDetailsService;
 import org.denis.coinkeeper.api.repositories.UserRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

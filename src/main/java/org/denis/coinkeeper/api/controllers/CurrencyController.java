@@ -2,7 +2,7 @@ package org.denis.coinkeeper.api.controllers;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.denis.coinkeeper.api.Services.CurrencyService;
+import org.denis.coinkeeper.api.services.CurrencyService;
 import org.denis.coinkeeper.api.dto.CurrencyDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,12 +22,12 @@ public class CurrencyController {
 
 
     @PostMapping
-    public ResponseEntity<?> createCurrency(@RequestBody CurrencyDto currencyDto) {
+    public ResponseEntity<Void> createCurrency(@RequestBody CurrencyDto currencyDto) {
 
         currencyService.createCurrency(currencyDto);
 
         return ResponseEntity
-                .created(URI.create("/currency"))
+                .created(URI.create(ENDPOINT_PATH))
                 .build();
     }
 
@@ -53,10 +53,11 @@ public class CurrencyController {
     public ResponseEntity<CurrencyDto> putCurrency(@PathVariable Long id,
                                                    @RequestBody CurrencyDto currencyDto){
 
-        CurrencyDto currencyDtoResult = currencyService.putCurrencyById(id,currencyDto);
+        currencyService.putCurrency(id, currencyDto);
 
         return ResponseEntity
-                .ok(currencyDtoResult);
+                .created(URI.create(ENDPOINT_PATH))
+                .build();
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCurrency(@PathVariable Long id){

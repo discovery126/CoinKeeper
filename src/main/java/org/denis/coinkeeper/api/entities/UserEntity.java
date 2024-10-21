@@ -36,33 +36,16 @@ public class UserEntity {
     @OneToMany(mappedBy = "user",
             cascade = CascadeType.ALL,
             orphanRemoval = true)
-    private List<ProfitEntity> profitList = new ArrayList<>();
+    private List<FinanceEntity> financeList = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "user",
-            cascade = CascadeType.ALL,
-            orphanRemoval = true)
-    private List<ExpensesEntity> expensesList = new ArrayList<>();
-
-
-    public void addProfit(ProfitEntity profitEntity) {
-        profitList.add(profitEntity);
-        profitEntity.setUser(this);
+    public void addFinance(FinanceEntity financeEntity) {
+        financeList.add(financeEntity);
+        financeEntity.setUser(this);
     }
 
-    public void removeProfit(ProfitEntity profitEntity) {
-        profitList.remove(profitEntity);
-        profitEntity.setUser(null);
-    }
-
-    public void addExpenses(ExpensesEntity expensesEntity) {
-        expensesList.add(expensesEntity);
-        expensesEntity.setUser(this);
-    }
-
-    public void removeExpenses(ExpensesEntity expensesEntity) {
-        expensesList.remove(expensesEntity);
-        expensesEntity.setUser(null);
+    public void removeFinance(FinanceEntity financeEntity) {
+        financeList.remove(financeEntity);
+        financeEntity.setUser(null);
     }
 
 }

@@ -1,4 +1,4 @@
-package org.denis.coinkeeper.api.Services;
+package org.denis.coinkeeper.api.services;
 
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.CurrencyDto;
@@ -45,8 +45,8 @@ public class CurrencyService {
         }
     }
 
-    public CurrencyDto putCurrencyById(Long currencyId,
-                                       CurrencyDto currencyDto) {
+    public void putCurrency(Long currencyId,
+                            CurrencyDto currencyDto) {
         CurrencyEntity currencyEntity = currencyRepository.getCurrencyEntityByCurrencyId(currencyId);
         if (currencyEntity != null) {
             if (!currencyEntity.getCurrencyName().equals(currencyDto.getCurrencyName())) {
@@ -55,7 +55,7 @@ public class CurrencyService {
             if (!currencyEntity.getCurrencyDescription().equals(currencyDto.getCurrencyDescription())) {
                 currencyEntity.setCurrencyDescription(currencyDto.getCurrencyDescription());
             }
-            return currencyDtoFactory.makeCurrencyDto(currencyRepository.save(currencyEntity));
+            currencyRepository.save(currencyEntity);
         }
         else {
             throw new BadRequestException("this currency not exist");

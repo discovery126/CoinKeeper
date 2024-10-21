@@ -11,17 +11,11 @@ import java.time.Instant;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "expenses")
-
-//!!!!
-//TODO:  timur: ExpensesEntity и ProfitEntity - по сути одно и тоже
-// Я  бы сделал какой-то BalanceEntry c полем BalanceType (PROFIT и EXPENSE)
-// Тогда количество дублированной логики сильно уменьшится
-
-public class ExpensesEntity {
+@Table(name = "finance")
+public class FinanceEntity {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long expensesId;
+    private Long financeId;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
@@ -35,6 +29,9 @@ public class ExpensesEntity {
 
     @Column
     private Long price;
+
+    @Column
+    private String financeType;
 
     @Column
     @Builder.Default

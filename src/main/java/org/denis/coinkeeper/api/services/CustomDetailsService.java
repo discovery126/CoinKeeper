@@ -1,4 +1,4 @@
-package org.denis.coinkeeper.api.Services;
+package org.denis.coinkeeper.api.services;
 
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.entities.UserEntity;

@@ -1,22 +1,15 @@
-package org.denis.coinkeeper.api.Services;
+package org.denis.coinkeeper.api.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.UserAuthDto;
 import org.denis.coinkeeper.api.dto.UserDto;
-import org.denis.coinkeeper.api.dto.UserFinanceDto;
-import org.denis.coinkeeper.api.dto.UserSummaryDto;
 import org.denis.coinkeeper.api.entities.CurrencyEntity;
 import org.denis.coinkeeper.api.entities.UserEntity;
 import org.denis.coinkeeper.api.exceptions.BadRequestException;
 import org.denis.coinkeeper.api.exceptions.ServerErrorException;
-import org.denis.coinkeeper.api.factories.CurrencyDtoFactory;
-import org.denis.coinkeeper.api.factories.ExpensesDtoFactory;
-import org.denis.coinkeeper.api.factories.ProfitDtoFactory;
 import org.denis.coinkeeper.api.factories.UserDtoFactory;
 import org.denis.coinkeeper.api.repositories.CurrencyRepository;
-import org.denis.coinkeeper.api.repositories.ExpensesRepository;
-import org.denis.coinkeeper.api.repositories.ProfitRepository;
 import org.denis.coinkeeper.api.repositories.UserRepository;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -35,7 +28,7 @@ public class UserService {
 
 
     @Transactional
-    public UserSummaryDto register(UserAuthDto userAuthDto) {
+    public UserDto register(UserAuthDto userAuthDto) {
 
         String currencyDefault = "RUB";
         Optional<CurrencyEntity> currencyEntityOptional = currencyRepository.findByCurrencyName(currencyDefault);
@@ -51,13 +44,8 @@ public class UserService {
             if (userEntityOptional.isEmpty()) {
 
                 UserEntity resultEntity = userRepository.save(userEntity);
-                UserDto userDto = userDtoFactory.makeUserDto(resultEntity);
 
-                UserFinanceDto userFinanceDto = userDtoFactory.makeFinanceDto(resultEntity);
-                return UserSummaryDto.builder()
-                        .userDto(userDto)
-                        .userFinanceDto(userFinanceDto)
-                        .build();
+                return userDtoFactory.makeUserDto(resultEntity);
             }
             else {
                 throw new BadRequestException("User already exists");
@@ -71,7 +59,7 @@ public class UserService {
 
 
     @Transactional
-    public UserDto putUser(String email , UserDto userDto) {
+    public void putUser(String email , UserDto userDto) {
 
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if (userEntity.isPresent()) {
@@ -91,7 +79,7 @@ public class UserService {
             if (!userEntity1.getAccount().equals(userDto.getAccount())) {
                 userEntity1.setAccount(userDto.getAccount());
             }
-            return userDtoFactory.makeUserDto(userRepository.save(userEntity1));
+            userRepository.save(userEntity1);
         }
         else {
             throw new BadRequestException("User already exists");
@@ -126,13 +114,13 @@ public class UserService {
         }
     }
 
-    public UserFinanceDto getFinanceUser(String email) {
-        Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
-        if (userEntityOptional.isPresent()) {
-            return userDtoFactory.makeFinanceDto(userEntityOptional.get());
-        }
-        else {
-            throw new BadRequestException("this user not found");
-        }
-    }
+//    public UserFinanceDto getFinanceUser(String email) {
+//        Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
+//        if (userEntityOptional.isPresent()) {
+//            return userDtoFactory.makeFinanceDto(userEntityOptional.get());
+//        }
+//        else {
+//            throw new BadRequestException("this user not found");
+//        }
+//    }
 }
