@@ -20,7 +20,6 @@ public class UserDtoFactory {
                 .currency(CurrencyDto.builder()
                         .currencyId(userEntity.getCurrency().getCurrencyId())
                         .currencyName(userEntity.getCurrency().getCurrencyName())
-                        .currencyDescription(userEntity.getCurrency().getCurrencyDescription())
                         .build())
                 .build();
     }

@@ -1,10 +1,8 @@
 package org.denis.coinkeeper.api.repositories;
 
 import org.denis.coinkeeper.api.entities.FinanceEntity;
-import org.denis.coinkeeper.api.entities.FinanceType;
 import org.denis.coinkeeper.api.entities.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.stream.Stream;

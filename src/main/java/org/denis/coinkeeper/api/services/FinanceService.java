@@ -42,7 +42,7 @@ public class FinanceService {
             userRepository.save(userEntity);
         }
         else {
-            throw new BadRequestException("This user not found");
+            throw new BadRequestException("This user has not been found");
         }
 
     }
@@ -58,7 +58,7 @@ public class FinanceService {
                     .toList();
         }
         else {
-            throw new BadRequestException("This user not found");
+            throw new BadRequestException("This user has not been found");
         }
     }
 
@@ -69,14 +69,13 @@ public class FinanceService {
         if (userEntityOptional.isPresent()) {
             FinanceEntity financeEntity =
                     financeRepository.findFinanceEntitiesByUserAndFinanceId(userEntityOptional.get(), financeId);
-            if (financeEntity != null) {
-                return financeDtoFactory.makeFinanceDto(financeEntity);
-            } else {
-                throw new BadRequestException("This id profit not found");
+            if (financeEntity == null) {
+                throw new BadRequestException("This finance has not been found");
             }
+            return financeDtoFactory.makeFinanceDto(financeEntity);
         }
         else {
-            throw new BadRequestException("This user not found");
+            throw new BadRequestException("This user has not been found");
         }
 
     }
@@ -112,11 +111,11 @@ public class FinanceService {
                 financeRepository.save(financeEntityOrigin);
             }
             else {
-                throw new BadRequestException("This id profit not found");
+                throw new BadRequestException("This finance has not been found");
             }
         }
         else {
-            throw new BadRequestException("This user not found");
+            throw new BadRequestException("This user has not been found");
         }
 
     }
@@ -127,11 +126,13 @@ public class FinanceService {
         if (userEntityOptional.isPresent()) {
             UserEntity user = userEntityOptional.get();
             FinanceEntity financeEntity = financeRepository.findFinanceEntitiesByUserAndFinanceId(user,financeId);
-            if (financeEntity != null) {
-                user.removeFinance(financeEntity);
-            } else {
-                throw new BadRequestException("This id profit not found");
+            if (financeEntity == null) {
+                throw new BadRequestException("This finance has not been found");
             }
+
+            user.removeFinance(financeEntity);
+        } else {
+            throw new BadRequestException("This user has not been found");
         }
 
     }

@@ -2,7 +2,7 @@ package org.denis.coinkeeper.api.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.denis.coinkeeper.api.dto.UserAuthDto;
+import org.denis.coinkeeper.api.dto.RegisterDto;
 import org.denis.coinkeeper.api.dto.UserDto;
 import org.denis.coinkeeper.api.entities.CurrencyEntity;
 import org.denis.coinkeeper.api.entities.UserEntity;
@@ -26,49 +26,33 @@ public class UserService {
     private final UserRepository userRepository;
     private final CurrencyRepository currencyRepository;
 
-
     @Transactional
-    public UserDto register(UserAuthDto userAuthDto) {
+    public UserDto register(RegisterDto registerDto) {
 
         String currencyDefault = "RUB";
-        Optional<CurrencyEntity> currencyEntityOptional = currencyRepository.findByCurrencyName(currencyDefault);
-        if (currencyEntityOptional.isPresent()) {
+        // Valid check is not null currency
+        CurrencyEntity currencyEntity = currencyRepository.findByCurrencyName(currencyDefault).get();
 
-            UserEntity userEntity = UserEntity.builder()
-                    .email(userAuthDto.getEmail())
-                    .password(passwordEncoder.encode(userAuthDto.getPassword()))
-                    .currency(currencyEntityOptional.get())
-                    .build();
+        UserEntity userEntity = UserEntity.builder()
+                .email(registerDto.getEmail())
+                .password(passwordEncoder.encode(registerDto.getPassword()))
+                .currency(currencyEntity)
+                .build();
 
-            Optional<UserEntity> userEntityOptional = userRepository.findByEmail(userAuthDto.getEmail());
-            if (userEntityOptional.isEmpty()) {
+        UserEntity resultEntity = userRepository.save(userEntity);
 
-                UserEntity resultEntity = userRepository.save(userEntity);
-
-                return userDtoFactory.makeUserDto(resultEntity);
-            }
-            else {
-                throw new BadRequestException("User already exists");
-            }
-        }
-
-        else {
-            throw new ServerErrorException("Server Error with Currency");
-        }
+        return userDtoFactory.makeUserDto(resultEntity);
     }
 
 
     @Transactional
-    public void putUser(String email , UserDto userDto) {
+    public void putUser(String email, UserDto userDto) {
 
         Optional<UserEntity> userEntity = userRepository.findByEmail(email);
         if (userEntity.isPresent()) {
             UserEntity userEntity1 = userEntity.get();
 
             Optional<CurrencyEntity> currencyEntity = currencyRepository.findByCurrencyName(userDto.getCurrency().getCurrencyName());
-
-            if (currencyEntity.isEmpty())
-                throw new BadRequestException(String.format("The currency \"%s\" does not exist", userDto.getCurrency().getCurrencyName()));
 
             if (!userEntity1.getEmail().equals(userDto.getEmail())) {
                 userEntity1.setEmail(userDto.getEmail());
@@ -80,9 +64,8 @@ public class UserService {
                 userEntity1.setAccount(userDto.getAccount());
             }
             userRepository.save(userEntity1);
-        }
-        else {
-            throw new BadRequestException("User already exists");
+        } else {
+            throw new BadRequestException("This user has not been found");
         }
     }
 
@@ -90,7 +73,7 @@ public class UserService {
 
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
         if (userEntityOptional.isEmpty())
-            throw new UsernameNotFoundException("this user not found");
+            throw new BadRequestException("This user has not been found");
 
         return userDtoFactory.makeUserDto(userEntityOptional.get());
     }
@@ -106,21 +89,10 @@ public class UserService {
     @Transactional
     public void removeUser(String email) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
-        if (userEntityOptional.isPresent()) {
-            userRepository.delete(userEntityOptional.get());
-        }
-        else {
-            throw new BadRequestException("this user not found");
-        }
-    }
 
-//    public UserFinanceDto getFinanceUser(String email) {
-//        Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
-//        if (userEntityOptional.isPresent()) {
-//            return userDtoFactory.makeFinanceDto(userEntityOptional.get());
-//        }
-//        else {
-//            throw new BadRequestException("this user not found");
-//        }
-//    }
+        if (userEntityOptional.isEmpty())
+            throw new BadRequestException("This user has not been found");
+
+        userRepository.delete(userEntityOptional.get());
+    }
 }

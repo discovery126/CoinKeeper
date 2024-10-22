@@ -1,7 +1,6 @@
 package org.denis.coinkeeper.api.entities;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.Null;
 import lombok.*;
 
 @Setter
@@ -19,7 +18,4 @@ public class CurrencyEntity {
 
     @Column(name = "currency_name")
     private String currencyName;
-
-    @Column(name = "currency_description")
-    private String currencyDescription;
 }

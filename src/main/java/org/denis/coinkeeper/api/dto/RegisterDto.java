@@ -4,16 +4,15 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Data;
+import org.denis.coinkeeper.api.validation.EmailUnique;
 import org.hibernate.validator.constraints.Length;
 
-//TODO: timur:  Я бы переназвал класс в RegisterDto - ( тут могут появиться  новые поля)
 @Data
 @Builder
-public class UserAuthDto {
+public class RegisterDto {
 
-
-    //TODO: timur:  Я бы добавил кастомный валидатор проверки уникальности email)
     //TODO: timur:  Еще я бы добавил поле login или username - он мог бы совпадать с email по желанию пользователя  )
+    @EmailUnique
     @NotNull
     @Email(message = "email: invalid format")
     private String email;

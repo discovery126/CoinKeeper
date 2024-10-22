@@ -22,7 +22,6 @@ public class CurrencyService {
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
                 .currencyName(currencyDto.getCurrencyName())
-                .currencyDescription(currencyDto.getCurrencyDescription())
                 .build();
         currencyRepository.save(currencyEntity);
     }
@@ -51,9 +50,6 @@ public class CurrencyService {
         if (currencyEntity != null) {
             if (!currencyEntity.getCurrencyName().equals(currencyDto.getCurrencyName())) {
                 currencyEntity.setCurrencyName(currencyDto.getCurrencyName());
-            }
-            if (!currencyEntity.getCurrencyDescription().equals(currencyDto.getCurrencyDescription())) {
-                currencyEntity.setCurrencyDescription(currencyDto.getCurrencyDescription());
             }
             currencyRepository.save(currencyEntity);
         }

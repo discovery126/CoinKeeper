@@ -11,7 +11,6 @@ public class CurrencyDtoFactory {
         return CurrencyDto.builder()
                 .currencyId(currencyEntity.getCurrencyId())
                 .currencyName(currencyEntity.getCurrencyName())
-                .currencyDescription(currencyEntity.getCurrencyDescription())
                 .build();
     }
 }
