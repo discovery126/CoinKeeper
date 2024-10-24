@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.CurrencyDto;
 import org.denis.coinkeeper.api.entities.CurrencyEntity;
 import org.denis.coinkeeper.api.exceptions.BadRequestException;
-import org.denis.coinkeeper.api.factories.CurrencyDtoFactory;
+import org.denis.coinkeeper.api.convertors.CurrencyConvertor;
 import org.denis.coinkeeper.api.repositories.CurrencyRepository;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 public class CurrencyService {
 
     private final CurrencyRepository currencyRepository;
-    private final CurrencyDtoFactory currencyDtoFactory;
+    private final CurrencyConvertor currencyConvertor;
 
     public void createCurrency(CurrencyDto currencyDto) {
 
@@ -29,7 +29,7 @@ public class CurrencyService {
     public List<CurrencyDto> getCurrencyDtoList() {
 
         return currencyRepository.streamAllBy()
-                .map(currencyDtoFactory::makeCurrencyDto)
+                .map(currencyConvertor::makeCurrencyDto)
                 .collect(Collectors.toList());
     }
 
@@ -37,7 +37,7 @@ public class CurrencyService {
 
         CurrencyEntity currencyEntity = currencyRepository.getCurrencyEntityByCurrencyId(currencyId);
         if (currencyEntity != null) {
-            return currencyDtoFactory.makeCurrencyDto(currencyEntity);
+            return currencyConvertor.makeCurrencyDto(currencyEntity);
         }
         else {
             throw new BadRequestException("this currency not exist");

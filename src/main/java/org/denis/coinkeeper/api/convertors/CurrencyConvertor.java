@@ -1,11 +1,11 @@
-package org.denis.coinkeeper.api.factories;
+package org.denis.coinkeeper.api.convertors;
 
 import org.denis.coinkeeper.api.dto.CurrencyDto;
 import org.denis.coinkeeper.api.entities.CurrencyEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CurrencyDtoFactory {
+public class CurrencyConvertor {
 
     public CurrencyDto makeCurrencyDto(CurrencyEntity currencyEntity) {
         return CurrencyDto.builder()

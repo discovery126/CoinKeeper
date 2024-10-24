@@ -1,4 +1,4 @@
-package org.denis.coinkeeper.api.factories;
+package org.denis.coinkeeper.api.convertors;
 
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.CurrencyDto;
@@ -7,10 +7,7 @@ import org.denis.coinkeeper.api.entities.UserEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-@RequiredArgsConstructor
-// По сути это не фабрика, а преобразователь в Dto
-public class UserDtoFactory {
-
+public class UserConvertor {
 
     public UserDto makeUserDto(UserEntity userEntity) {
         return UserDto.builder()

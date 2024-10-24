@@ -1,16 +1,16 @@
 package org.denis.coinkeeper.api.services;
 
 import lombok.RequiredArgsConstructor;
+import org.denis.coinkeeper.api.entities.AuthorityEntity;
 import org.denis.coinkeeper.api.entities.UserEntity;
 import org.denis.coinkeeper.api.repositories.UserRepository;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.Optional;
 
 
 @Service
@@ -21,16 +21,17 @@ public class CustomDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<UserEntity> userOptional = this.userRepository.findByEmail(username);
-        if (userOptional.isPresent()) {
-            return userOptional
-                    .map(userEntity -> User.builder()
-                            .username(userEntity.getEmail())
-                            .password(userEntity.getPassword())
-                            .build()).get();
-        } else {
-            throw new UsernameNotFoundException("UserEntity %s not found".formatted(username));
-        }
-    }
+        UserEntity userEntity = this.userRepository.findByEmail(username)
+                .orElseThrow(() -> new UsernameNotFoundException("UserEntity %s not found".formatted(username)));
 
+        return User.builder()
+                .username(userEntity.getEmail())
+                .password(userEntity.getPassword())
+                .authorities(userEntity.getAuthorities()
+                        .stream()
+                        .map(AuthorityEntity::getAuthorityName)
+                        .map(SimpleGrantedAuthority::new)
+                        .toList())
+                .build();
+        }
 }

@@ -1,4 +1,4 @@
-package org.denis.coinkeeper.api.factories;
+package org.denis.coinkeeper.api.convertors;
 
 import org.denis.coinkeeper.api.dto.FinanceDto;
 import org.denis.coinkeeper.api.entities.FinanceEntity;
@@ -6,7 +6,7 @@ import org.denis.coinkeeper.api.entities.FinanceType;
 import org.springframework.stereotype.Component;
 
 @Component
-public class FinanceDtoFactory {
+public class FinanceConvertor {
 
     public FinanceDto makeFinanceDto(FinanceEntity financeEntity) {
         return FinanceDto.builder()
