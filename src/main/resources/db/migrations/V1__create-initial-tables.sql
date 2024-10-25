@@ -30,7 +30,7 @@ create table public.finance
     price       bigint,
     user_id     bigint
         constraint fk_user_finance_user_id
-            references public.users,
+            references public.users ("user_id"),
     finance_type varchar(10),
     category     varchar(255)
 );
@@ -48,12 +48,12 @@ create table public.user_authority
         primary key,
     user_id bigint not null
         constraint fk_user_authority_user_id
-            references public.users
+            references public.users ("user_id")
             ON UPDATE CASCADE
             ON DELETE CASCADE,
     authority_id bigint not null
         constraint fk_user_authority_authority_id
-            references public.authority
+            references public.authority ("authority_id")
             ON UPDATE CASCADE
             ON DELETE CASCADE
 );

@@ -50,7 +50,7 @@ public class UserService {
                 .email(registerDto.getEmail())
                 .password(passwordEncoder.encode(registerDto.getPassword()))
                 .currency(currencyEntity)
-                .authorities(Collections.EMPTY_SET)
+                .authorities(userAuthorityEntities)
                 .build();
 
         UserEntity resultEntity = userRepository.save(userEntity);

@@ -13,7 +13,8 @@ import lombok.*;
 @Table(name = "authority")
 public class AuthorityEntity {
 
-    @Column(name = "authority_id") @Id
+    @Column(name = "authority_id")
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long authorityId;
 

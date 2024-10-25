@@ -11,10 +11,11 @@ import lombok.*;
 @Entity
 @Table(name = "user_authority")
 public class UserAuthorityEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column
+    @Column(name = "user_id")
     private Long userId;
-    @Column
+    @Column(name = "authority_id")
     private Long authorityId;
 }
