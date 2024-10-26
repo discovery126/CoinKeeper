@@ -1,5 +1,6 @@
 package org.denis.coinkeeper.api.services;
 
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.CurrencyDto;
 import org.denis.coinkeeper.api.entities.CurrencyEntity;
@@ -18,6 +19,8 @@ public class CurrencyService {
     private final CurrencyRepository currencyRepository;
     private final CurrencyConvertor currencyConvertor;
 
+
+    @Transactional
     public void createCurrency(CurrencyDto currencyDto) {
 
         CurrencyEntity currencyEntity = CurrencyEntity.builder()
@@ -26,6 +29,7 @@ public class CurrencyService {
         currencyRepository.save(currencyEntity);
     }
 
+    @Transactional(readOnly = true)
     public List<CurrencyDto> getCurrencyDtoList() {
 
         return currencyRepository.streamAllBy()
@@ -33,6 +37,7 @@ public class CurrencyService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional(readOnly = true)
     public CurrencyDto getCurrencyById(Long currencyId) {
 
         CurrencyEntity currencyEntity = currencyRepository.getCurrencyEntityByCurrencyId(currencyId);
@@ -44,6 +49,7 @@ public class CurrencyService {
         }
     }
 
+    @Transactional
     public void putCurrency(Long currencyId,
                             CurrencyDto currencyDto) {
         CurrencyEntity currencyEntity = currencyRepository.getCurrencyEntityByCurrencyId(currencyId);
@@ -58,6 +64,7 @@ public class CurrencyService {
         }
     }
 
+    @Transactional
     public void deleteCurrencyById(Long currencyId) {
         currencyRepository.deleteById(currencyId);
     }

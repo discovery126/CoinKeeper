@@ -52,7 +52,6 @@ public class FinanceController {
 
     }
 
-
     @PutMapping("/{id}")
     public ResponseEntity<FinanceDto> putFinance(@RequestBody FinanceDto financeDto,
                                                  @PathVariable("id") Long financeId) {

@@ -1,15 +1,15 @@
 package org.denis.coinkeeper.api.services;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.denis.coinkeeper.api.convertors.FinanceConvertor;
 import org.denis.coinkeeper.api.dto.FinanceDto;
 import org.denis.coinkeeper.api.entities.FinanceEntity;
 import org.denis.coinkeeper.api.entities.UserEntity;
 import org.denis.coinkeeper.api.exceptions.BadRequestException;
-import org.denis.coinkeeper.api.convertors.FinanceConvertor;
 import org.denis.coinkeeper.api.repositories.FinanceRepository;
 import org.denis.coinkeeper.api.repositories.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +46,7 @@ public class FinanceService {
         }
 
     }
-    @Transactional
+    @Transactional(readOnly = true)
     public List<FinanceDto> getAllFinance(String email, String stringFinanceType) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
         if (userEntityOptional.isPresent()) {
@@ -61,7 +61,7 @@ public class FinanceService {
             throw new BadRequestException("This user has not been found");
         }
     }
-
+    @Transactional(readOnly = true)
     public FinanceDto getFinanceById(String email,
                                      Long financeId) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);

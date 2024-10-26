@@ -5,14 +5,15 @@ import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.CurrencyDto;
 import org.denis.coinkeeper.api.services.CurrencyService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Transactional
 @RestController
+@PreAuthorize("hasAuthority('ADMIN')")
 @RequestMapping("/v1/currency")
 public class CurrencyController {
 

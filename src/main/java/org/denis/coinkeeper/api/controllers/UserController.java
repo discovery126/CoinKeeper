@@ -3,10 +3,12 @@ package org.denis.coinkeeper.api.controllers;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.UserDto;
+import org.denis.coinkeeper.api.dto.UserDtoWithRoles;
 import org.denis.coinkeeper.api.security.SecuritySessionContext;
 import org.denis.coinkeeper.api.services.UserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -34,7 +36,7 @@ public class UserController {
                 .ok(user);
     }
     @PutMapping
-    public ResponseEntity<Void> putUser(@RequestBody @Valid UserDto userDto) {
+    public ResponseEntity<Void> putUser(@RequestBody UserDto userDto) {
 
         String email = securitySessionContext.getCurrentUserName();
 
@@ -45,19 +47,10 @@ public class UserController {
                 .build();
     }
 
-    //TODO: timur:    Такие ресурсы не должны торчать наружу для обычных пользователей ( Это должно быть под ролью ADMIN)
-    @PreAuthorize("hasAuthority('USER')")
-    @GetMapping("/users")
-    public ResponseEntity<List<UserDto>> getAllUsers() {
-
-        List<UserDto> userDtoList = userService.getUsers();
-        return ResponseEntity
-                .ok(userDtoList);
-    }
 
     @DeleteMapping
     public ResponseEntity<Void> deleteUser() {
-        
+
         String email = securitySessionContext.getCurrentUserName();
 
         userService.removeUser(email);
@@ -65,5 +58,22 @@ public class UserController {
         return ResponseEntity
                 .noContent()
                 .build();
+    }
+
+    @PostMapping("/newAdmin")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<UserDtoWithRoles> createNewAdmin(@RequestBody UserDto userDto) {
+
+        UserDtoWithRoles userDtoWithRoles = userService.newAdmin(userDto);
+        return ResponseEntity
+                .ok(userDtoWithRoles);
+    }
+    @GetMapping("/users")
+    @PreAuthorize("hasAuthority('ADMIN')")
+    public ResponseEntity<List<UserDto>> getAllUsers() {
+
+        List<UserDto> userDtoList = userService.getUsers();
+        return ResponseEntity
+                .ok(userDtoList);
     }
 }

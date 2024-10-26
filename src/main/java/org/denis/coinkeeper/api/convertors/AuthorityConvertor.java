@@ -1,11 +1,12 @@
 package org.denis.coinkeeper.api.convertors;
 
 import org.denis.coinkeeper.api.dto.AuthorityDto;
-import org.denis.coinkeeper.api.dto.FinanceDto;
 import org.denis.coinkeeper.api.entities.AuthorityEntity;
-import org.denis.coinkeeper.api.entities.FinanceEntity;
-import org.denis.coinkeeper.api.entities.FinanceType;
 import org.springframework.stereotype.Component;
+
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Component
 public class AuthorityConvertor {
@@ -21,5 +22,10 @@ public class AuthorityConvertor {
                 .authorityId(authorityDto.getAuthorityId())
                 .authorityName(authorityDto.getAuthorityName())
                 .build();
+    }
+    public Set<AuthorityDto> makeAuthorityDtoSet(Set<AuthorityEntity> authorityEntitySet) {
+        return  authorityEntitySet.stream()
+                .map(this::makeAuthorityDto)
+                .collect(Collectors.toSet());
     }
 }
