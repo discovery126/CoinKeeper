@@ -6,6 +6,7 @@ import org.denis.coinkeeper.api.dto.UserDto;
 import org.denis.coinkeeper.api.security.SecuritySessionContext;
 import org.denis.coinkeeper.api.services.UserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
@@ -45,6 +46,7 @@ public class UserController {
     }
 
     //TODO: timur:    Такие ресурсы не должны торчать наружу для обычных пользователей ( Это должно быть под ролью ADMIN)
+    @PreAuthorize("hasAuthority('USER')")
     @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
 

@@ -6,7 +6,7 @@ import org.denis.coinkeeper.api.dto.FinanceDto;
 import org.denis.coinkeeper.api.entities.FinanceEntity;
 import org.denis.coinkeeper.api.entities.UserEntity;
 import org.denis.coinkeeper.api.exceptions.BadRequestException;
-import org.denis.coinkeeper.api.factories.FinanceDtoFactory;
+import org.denis.coinkeeper.api.convertors.FinanceConvertor;
 import org.denis.coinkeeper.api.repositories.FinanceRepository;
 import org.denis.coinkeeper.api.repositories.UserRepository;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public class FinanceService {
 
     private final FinanceRepository financeRepository;
-    private final FinanceDtoFactory financeDtoFactory;
+    private final FinanceConvertor financeConvertor;
 
     private final UserRepository userRepository;
 
@@ -54,7 +54,7 @@ public class FinanceService {
             Stream<FinanceEntity> financeEntity = financeRepository.streamAllByUserAndFinanceType(userEntity, stringFinanceType);
 
             return financeEntity
-                    .map(financeDtoFactory::makeFinanceDto)
+                    .map(financeConvertor::makeFinanceDto)
                     .toList();
         }
         else {
@@ -72,7 +72,7 @@ public class FinanceService {
             if (financeEntity == null) {
                 throw new BadRequestException("This finance has not been found");
             }
-            return financeDtoFactory.makeFinanceDto(financeEntity);
+            return financeConvertor.makeFinanceDto(financeEntity);
         }
         else {
             throw new BadRequestException("This user has not been found");

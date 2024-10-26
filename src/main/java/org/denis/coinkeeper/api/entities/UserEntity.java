@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -38,6 +39,12 @@ public class UserEntity {
             orphanRemoval = true)
     private List<FinanceEntity> financeList = new ArrayList<>();
 
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "user_authority",
+        joinColumns = @JoinColumn(name = "user_id"),
+        inverseJoinColumns = @JoinColumn(name = "authority_id"))
+    private Set<AuthorityEntity> authorities;
+
     public void addFinance(FinanceEntity financeEntity) {
         financeList.add(financeEntity);
         financeEntity.setUser(this);
@@ -50,4 +57,3 @@ public class UserEntity {
 
 }
 //referencedColumnName - указываем название поля в java, а если есть @Column, то что внутри
-//@JoinColumn(name = "user_id",referencedColumnName = "userId")

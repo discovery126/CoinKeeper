@@ -2,28 +2,34 @@ package org.denis.coinkeeper.api.services;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.denis.coinkeeper.api.convertors.AuthorityConvertor;
+import org.denis.coinkeeper.api.convertors.UserConvertor;
 import org.denis.coinkeeper.api.dto.RegisterDto;
 import org.denis.coinkeeper.api.dto.UserDto;
+import org.denis.coinkeeper.api.entities.AuthorityEntity;
 import org.denis.coinkeeper.api.entities.CurrencyEntity;
 import org.denis.coinkeeper.api.entities.UserEntity;
 import org.denis.coinkeeper.api.exceptions.BadRequestException;
-import org.denis.coinkeeper.api.exceptions.ServerErrorException;
-import org.denis.coinkeeper.api.factories.UserDtoFactory;
+import org.denis.coinkeeper.api.repositories.AuthorityRepository;
 import org.denis.coinkeeper.api.repositories.CurrencyRepository;
 import org.denis.coinkeeper.api.repositories.UserRepository;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
     private final PasswordEncoder passwordEncoder;
-    private final UserDtoFactory userDtoFactory;
+    private final UserConvertor userConvertor;
     private final UserRepository userRepository;
+    private final AuthorityRepository authorityRepository;
+    private final AuthorityConvertor authorityConvertor;
     private final CurrencyRepository currencyRepository;
 
     @Transactional
@@ -33,15 +39,23 @@ public class UserService {
         // Valid check is not null currency
         CurrencyEntity currencyEntity = currencyRepository.findByCurrencyName(currencyDefault).get();
 
+        Set<AuthorityEntity> userAuthorityEntities =
+                registerDto
+                .getAuthorityEntitySet()
+                .stream()
+                .map(authDto -> authorityRepository.findAuthorityEntityByAuthorityName(authDto.getAuthorityName()))
+                .collect(Collectors.toSet());
+
         UserEntity userEntity = UserEntity.builder()
                 .email(registerDto.getEmail())
                 .password(passwordEncoder.encode(registerDto.getPassword()))
                 .currency(currencyEntity)
+                .authorities(userAuthorityEntities)
                 .build();
 
         UserEntity resultEntity = userRepository.save(userEntity);
 
-        return userDtoFactory.makeUserDto(resultEntity);
+        return userConvertor.makeUserDto(resultEntity);
     }
 
 
@@ -75,13 +89,14 @@ public class UserService {
         if (userEntityOptional.isEmpty())
             throw new BadRequestException("This user has not been found");
 
-        return userDtoFactory.makeUserDto(userEntityOptional.get());
+        return userConvertor.makeUserDto(userEntityOptional.get());
     }
 
+    @Transactional
     public List<UserDto> getUsers() {
 
         return userRepository.streamAllBy()
-                .map(userDtoFactory::makeUserDto)
+                .map(userConvertor::makeUserDto)
                 .toList();
     }
 
