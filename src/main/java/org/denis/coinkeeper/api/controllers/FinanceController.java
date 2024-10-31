@@ -35,9 +35,13 @@ public class FinanceController {
     }
 
     @GetMapping
-    public ResponseEntity<List<FinanceDto>> getAllFinance(@RequestParam(name = "type") FinanceType financeType) {
+    public ResponseEntity<List<FinanceDto>> getAllFinance(@RequestParam(name = "type",required = false) FinanceType financeType,
+                                                          @RequestParam(name = "period",required = false, defaultValue = "today") String period) {
         String email = securitySessionContext.getCurrentUserName();
-        List<FinanceDto> financeEntityList = financeService.getAllFinance(email,financeType.name());
+
+        List<FinanceDto> financeEntityList = financeService.getAllFinance(email,
+                financeType,
+                period);
 
         return ResponseEntity
                 .ok(financeEntityList);

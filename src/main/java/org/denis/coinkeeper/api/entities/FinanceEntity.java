@@ -3,7 +3,7 @@ package org.denis.coinkeeper.api.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -35,5 +35,5 @@ public class FinanceEntity {
 
     @Column
     @Builder.Default
-    private Instant AddedAt = Instant.now();
+    private LocalDateTime addedAt = LocalDateTime.now();
 }

@@ -16,7 +16,7 @@ public class FinanceConvertor {
                 .financeType(FinanceType.valueOf(financeEntity.getFinanceType()))
                 .userId(financeEntity.getUser().getUserId())
                 .category(financeEntity.getCategory())
-                .AddedAt(financeEntity.getAddedAt())
+                .addedAt(financeEntity.getAddedAt())
                 .build();
     }
 }

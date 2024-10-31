@@ -8,7 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.denis.coinkeeper.api.entities.FinanceType;
 
-import java.time.Instant;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -34,5 +34,5 @@ public class FinanceDto {
 
     @Null
     @Builder.Default
-    private Instant AddedAt = Instant.now();
+    private LocalDateTime addedAt = LocalDateTime.now();
 }
