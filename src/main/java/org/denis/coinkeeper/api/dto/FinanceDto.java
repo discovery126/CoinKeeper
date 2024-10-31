@@ -23,7 +23,7 @@ public class FinanceDto {
 
     private String category;
 
-    private Long price;
+    private Double price;
 
     // INCOME - доходы, // EXPENSES - расходы
     @JsonProperty("finance_type")

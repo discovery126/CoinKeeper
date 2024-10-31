@@ -28,7 +28,7 @@ public class FinanceEntity {
     private String category;
 
     @Column
-    private Long price;
+    private Double price;
 
     @Column
     private String financeType;
