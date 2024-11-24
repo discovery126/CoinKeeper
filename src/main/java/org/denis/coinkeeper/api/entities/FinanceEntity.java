@@ -3,6 +3,7 @@ package org.denis.coinkeeper.api.entities;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Getter
@@ -28,7 +29,7 @@ public class FinanceEntity {
     private String category;
 
     @Column
-    private Double price;
+    private BigDecimal price;
 
     @Column
     private String financeType;

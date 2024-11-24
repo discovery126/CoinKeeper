@@ -1,5 +1,7 @@
 package org.denis.coinkeeper.api.exceptions;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,15 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
 
         return ResponseEntity.internalServerError()
                 .body(new ErrorDto(List.of(ex.getMessage())));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    protected ResponseEntity<ErrorDto> handleServerErrorException(ConstraintViolationException ex) {
+
+        List<String> errors = ex.getConstraintViolations().stream()
+                .map(ConstraintViolation::getMessage)
+                .toList();
+        return ResponseEntity.badRequest().body(new ErrorDto(errors));
     }
     @ExceptionHandler(BadRequestException.class)
     protected ResponseEntity<ErrorDto> handleBadRequestException(BadRequestException ex) {

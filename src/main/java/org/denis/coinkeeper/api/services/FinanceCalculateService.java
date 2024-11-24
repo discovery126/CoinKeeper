@@ -8,13 +8,12 @@ import org.denis.coinkeeper.api.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
-import java.math.MathContext;
 import java.math.RoundingMode;
 import java.util.Optional;
 
 @Service
 @AllArgsConstructor
-public class FinancesCalculateService {
+public class FinanceCalculateService {
 
     private final UserRepository userRepository;
     private final FinanceRepository financeRepository;

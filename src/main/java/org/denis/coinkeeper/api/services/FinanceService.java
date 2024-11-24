@@ -1,5 +1,6 @@
 package org.denis.coinkeeper.api.services;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.convertors.FinanceConvertor;
 import org.denis.coinkeeper.api.dto.FinanceDto;
@@ -11,6 +12,7 @@ import org.denis.coinkeeper.api.repositories.FinanceRepository;
 import org.denis.coinkeeper.api.repositories.UserRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -19,6 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Validated
 @RequiredArgsConstructor
 public class FinanceService {
 
@@ -29,7 +32,7 @@ public class FinanceService {
 
     @Transactional
     public void createFinance(String email,
-                              FinanceDto financeDto) {
+                              @Valid FinanceDto financeDto) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
         if (userEntityOptional.isEmpty()) {
             throw new BadRequestException("This user has not been found");
@@ -103,7 +106,7 @@ public class FinanceService {
     @Transactional
     public void putFinance(String email,
                            Long financeId,
-                           FinanceDto financeDto) {
+                           @Valid FinanceDto financeDto) {
         Optional<UserEntity> userEntityOptional = userRepository.findByEmail(email);
         if (userEntityOptional.isEmpty()) {
             throw new BadRequestException("This user has not been found");
@@ -116,16 +119,22 @@ public class FinanceService {
                 .category(financeDto.getCategory())
                 .price(financeDto.getPrice())
                 .addedAt(financeDto.getAddedAt())
+                .financeType(financeDto.getFinanceType().name())
                 .build();
         if (financeEntityOrigin == null) {
             throw new BadRequestException("This finance has not been found");
         }
         if (!financeEntityOrigin.getName().equals(financeEntity.getName())) {
             financeEntityOrigin.setName(financeEntity.getName());
-        } else if (!financeEntityOrigin.getCategory().equals(financeEntity.getCategory())) {
+        }
+        if (!financeEntityOrigin.getCategory().equals(financeEntity.getCategory())) {
             financeEntityOrigin.setCategory(financeEntity.getCategory());
-        } else if (!financeEntityOrigin.getPrice().equals(financeEntity.getPrice())) {
+        }
+        if (!financeEntityOrigin.getPrice().equals(financeEntity.getPrice())) {
             financeEntityOrigin.setPrice(financeEntity.getPrice());
+        }
+        if (!financeEntityOrigin.getFinanceType().equals(financeEntity.getFinanceType())) {
+            financeEntityOrigin.setFinanceType(financeEntity.getFinanceType());
         }
         financeRepository.save(financeEntityOrigin);
 

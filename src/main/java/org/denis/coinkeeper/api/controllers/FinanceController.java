@@ -1,11 +1,12 @@
 package org.denis.coinkeeper.api.controllers;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.denis.coinkeeper.api.dto.FinanceDto;
 import org.denis.coinkeeper.api.entities.FinanceType;
 import org.denis.coinkeeper.api.security.SecuritySessionContext;
 import org.denis.coinkeeper.api.services.FinanceService;
-import org.denis.coinkeeper.api.services.FinancesCalculateService;
+import org.denis.coinkeeper.api.services.FinanceCalculateService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -21,7 +22,7 @@ public class FinanceController {
 
     private final SecuritySessionContext securitySessionContext;
     private final FinanceService financeService;
-    private final FinancesCalculateService financesCalculateService;
+    private final FinanceCalculateService financeCalculateService;
 
     @PostMapping
     ResponseEntity<Void> createFinance(@RequestBody FinanceDto financeDto) {
@@ -36,12 +37,12 @@ public class FinanceController {
     public ResponseEntity<List<FinanceDto>> getAllFinance(@RequestParam(name = "type",required = false) FinanceType financeType,
                                                           @RequestParam(name = "period",required = false, defaultValue = "today") String period) {
         String email = securitySessionContext.getCurrentUserName();
-        List<FinanceDto> financeEntityList = financeService.getAllFinance(email,
+        List<FinanceDto> financeDtoList = financeService.getAllFinance(email,
                 financeType,
                 period);
 
         return ResponseEntity
-                .ok(financeEntityList);
+                .ok(financeDtoList);
     }
 
     @GetMapping("/{id}")
@@ -54,7 +55,7 @@ public class FinanceController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<FinanceDto> putFinance(@RequestBody FinanceDto financeDto,
+    public ResponseEntity<FinanceDto> putFinance(@RequestBody @Valid FinanceDto financeDto,
                                                  @PathVariable("id") Long financeId) {
         String email = securitySessionContext.getCurrentUserName();
 
@@ -64,8 +65,6 @@ public class FinanceController {
                 .created(URI.create(ENDPOINT_PATH))
                 .build();
     }
-
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> removeFinance(@PathVariable("id") Long financeId) {
 
@@ -80,13 +79,15 @@ public class FinanceController {
     @GetMapping("/expenses")
     public ResponseEntity<Double> getSumExpenses() {
         String email = securitySessionContext.getCurrentUserName();
+
         return ResponseEntity
-                .ok(financesCalculateService.calculateSumExpenses(email));
+                .ok(financeCalculateService.calculateSumExpenses(email));
     }
     @GetMapping("/incomes")
     public ResponseEntity<Double> getSumIncomes() {
         String email = securitySessionContext.getCurrentUserName();
+
         return ResponseEntity
-                .ok(financesCalculateService.calculateSumIncomes(email));
+                .ok(financeCalculateService.calculateSumIncomes(email));
     }
 }
